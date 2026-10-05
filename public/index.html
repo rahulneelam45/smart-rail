@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Rail - AI Train Booking & Tracking</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="navbar-brand">
+                <i class="fas fa-train"></i> Smart Rail
+            </div>
+            <div class="navbar-menu">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#booking" class="nav-link">Book Ticket</a>
+                <a href="#tracking" class="nav-link">Track Train</a>
+                <a href="#saved" class="nav-link">Saved Trains</a>
+                <a href="#profile" class="nav-link">Profile</a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Home Section -->
+            <section id="home" class="section active">
+                <div class="hero">
+                    <h1>Welcome to Smart Rail</h1>
+                    <p>Book trains, track in real-time, and predict delays with AI</p>
+                    <button class="btn btn-primary" onclick="showSection('booking')">Book Now</button>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <i class="fas fa-ticket-alt"></i>
+                        <h3>Easy Booking</h3>
+                        <p>Book confirmed tickets instantly</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-map-location-dot"></i>
+                        <h3>Live Tracking</h3>
+                        <p>Track your train in real-time</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-brain"></i>
+                        <h3>AI Predictions</h3>
+                        <p>Predict delays based on history</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-heart"></i>
+                        <h3>Saved Trains</h3>
+                        <p>Save your favorite routes</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Booking Section -->
+            <section id="booking" class="section">
+                <div class="booking-container">
+                    <h2>Book Your Train Ticket</h2>
+                    <form class="booking-form" id="bookingForm">
+                        <div class="form-group">
+                            <label>From (Station)</label>
+                            <input type="text" id="from" placeholder="e.g., New Delhi" required>
+                        </div>
+                        <div class="form-group">
+                            <label>To (Station)</label>
+                            <input type="text" id="to" placeholder="e.g., Mumbai" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Journey Date</label>
+                            <input type="date" id="journeyDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Passengers</label>
+                            <input type="number" id="passengers" min="1" max="6" value="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Class</label>
+                            <select id="class" required>
+                                <option>1A (First Class)</option>
+                                <option>2A (Second Class)</option>
+                                <option>3A (Third Class)</option>
+                                <option>SL (Sleeper)</option>
+                                <option>General</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Search Trains</button>
+                    </form>
+
+                    <!-- Available Trains -->
+                    <div id="trainsResults" class="trains-results" style="display:none;">
+                        <h3>Available Trains</h3>
+                        <div id="trainsList" class="trains-list"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Train Tracking Section -->
+            <section id="tracking" class="section">
+                <div class="tracking-container">
+                    <h2>Track Your Train</h2>
+                    <div class="tracking-search">
+                        <input type="text" id="trackTrainNumber" placeholder="Enter train number (e.g., 12001)" maxlength="5">
+                        <button class="btn btn-primary" onclick="trackTrain()">Track Now</button>
+                    </div>
+
+                    <!-- Map -->
+                    <div id="map" class="map-container">
+                        <canvas id="mapCanvas" width="800" height="600"></canvas>
+                    </div>
+
+                    <!-- Train Details -->
+                    <div id="trainDetails" class="train-details" style="display:none;">
+                        <h3>Train Details</h3>
+                        <div class="details-grid">
+                            <div class="detail-item">
+                                <span class="label">Train Number:</span>
+                                <span id="detailTrainNo" class="value">-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="label">Current Location:</span>
+                                <span id="detailLocation" class="value">-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="label">Speed:</span>
+                                <span id="detailSpeed" class="value">-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="label">Predicted Delay:</span>
+                                <span id="detailDelay" class="value">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Saved Trains Section -->
+            <section id="saved" class="section">
+                <div class="saved-container">
+                    <h2>My Saved Trains</h2>
+                    <div id="savedTrainsList" class="saved-list">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Profile Section -->
+            <section id="profile" class="section">
+                <div class="profile-container">
+                    <h2>My Profile</h2>
+                    <div class="profile-card">
+                        <h3>User Information</h3>
+                        <div class="profile-info">
+                            <div class="info-item">
+                                <span>Name:</span>
+                                <span id="userName">Rahul Neelam</span>
+                            </div>
+                            <div class="info-item">
+                                <span>Email:</span>
+                                <span id="userEmail">rahulneelam45@example.com</span>
+                            </div>
+                            <div class="info-item">
+                                <span>Total Bookings:</span>
+                                <span id="totalBookings">0</span>
+                            </div>
+                            <div class="info-item">
+                                <span>Member Since:</span>
+                                <span id="memberSince">Oct 2024</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdn.socket.io/4.7.0/socket.io.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
